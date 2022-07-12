@@ -136,9 +136,9 @@ class Menufy_Public {
 		    $html_block = $html_block . "
 				<div class=\"shadow p-3 mb-5 bg-body rounded\">
 				<p>
-				<strong>
+				<h2>
 					{$menu_item["title"]}
-				</strong>
+				</h2>
 				</p>
 				<p>
 				{$menu_item["url"]}
@@ -157,7 +157,6 @@ class Menufy_Public {
 		}
 
 return <<<HTML
-    <h1>Menufy</h1>
 		{$html_block}
 		{$top_menu_items_r}
 HTML;
