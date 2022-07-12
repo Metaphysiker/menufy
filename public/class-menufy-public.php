@@ -111,21 +111,42 @@ class Menufy_Public {
 
 	public function menufy_func($atts){
 
+
 		$menu_items = wp_get_nav_menu_items("standard");
+
+		$array_of_descriptions = array();
+		
+		foreach ($menu_items as $key => &$menu_item) {
+			$array_of_descriptions[$menu_item->url] = YoastSEO()->meta->for_post($menu_item->url)->description;
+		}
+
 		?>
+
 		<?php
-		print("<pre>".print_r($menu_items,true)."</pre>");
+			print("<pre>".print_r($array_of_descriptions,true)."</pre>");
 		?>
+
 		<h1>Menufy</h1>
 		<?php
-			foreach ($menu_items as $menu_item) {
+
+
+			foreach ($menu_items as $key => &$menu_item) {
 				echo "<p>
 				{$menu_item->title}
+				</p>";
+				echo "<p>
+				{$menu_item->url}
+				</p>";
+				echo YoastSEO()->meta->for_post($menu_item->url)->description;
+				$meta_for_this_menu_item = YoastSEO()->meta->for_post($menu_item->url)->description;
+				echo "<p>
+				{$meta_for_this_menu_item}
 				</p>";
 			}
 		?>
 		<?php
 	}
+
 
 	function wp_get_menu_array($current_menu) {
 
@@ -151,7 +172,6 @@ class Menufy_Public {
 	        }
 	    }
 	    return $menu;
-
 	}
 
 }
