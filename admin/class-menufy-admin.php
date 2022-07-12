@@ -100,4 +100,30 @@ class Menufy_Admin {
 
 	}
 
+	public function dashboard_page(){
+
+		add_menu_page(
+			'Menufy',
+			'Menufy',
+			'manage_options',
+			'menufy-dashboard',
+			array( $this, 'dashboard_page_html' ),
+			'dashicons-book-alt'
+	);
+
+}
+
+public function dashboard_page_html(){
+	// check user capabilities
+	if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+	}
+
+	?>
+
+	<h1>Menufy</h1>
+
+	<?php
+}
+
 }
