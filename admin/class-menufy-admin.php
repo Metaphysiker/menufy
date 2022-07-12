@@ -122,6 +122,7 @@ public function dashboard_page_html(){
 	?>
 
 	<h1>Menufy</h1>
+	<p>Hier könnte mehr stehen</p>
 
 	<?php
 }

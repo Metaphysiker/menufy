@@ -111,40 +111,46 @@ class Menufy_Public {
 
 	public function menufy_func($atts){
 
-
 		$menu_items = wp_get_nav_menu_items("standard");
+		$random = "<p>nope</p>";
 
-		$array_of_descriptions = array();
-		
-		foreach ($menu_items as $key => &$menu_item) {
-			$array_of_descriptions[$menu_item->url] = YoastSEO()->meta->for_post($menu_item->url)->description;
+		if (!function_exists('is_plugin_active')) {
+		    include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		?>
-
-		<?php
-			print("<pre>".print_r($array_of_descriptions,true)."</pre>");
-		?>
-
-		<h1>Menufy</h1>
-		<?php
+		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
+   /* Let's do cool things */
 
 
-			foreach ($menu_items as $key => &$menu_item) {
-				echo "<p>
-				{$menu_item->title}
-				</p>";
-				echo "<p>
-				{$menu_item->url}
-				</p>";
-				echo YoastSEO()->meta->for_post($menu_item->url)->description;
-				$meta_for_this_menu_item = YoastSEO()->meta->for_post($menu_item->url)->description;
-				echo "<p>
-				{$meta_for_this_menu_item}
-				</p>";
+			foreach ($menu_items as &$menu_item) {
+				$random = $random . YoastSEO()->meta->for_post($menu_item->url)->description;
 			}
-		?>
-		<?php
+
+		}
+
+		$html_block = "";
+
+		foreach ($menu_items as &$menu_item) {
+		    $html_block = $html_block . "
+				<p>
+				<strong>
+					{$menu_item->title}
+				</strong>
+				</p>
+				<p>
+				{$menu_item->url}
+				</p>
+				<p>
+				{$menu_item->id}
+				</p>
+				";
+		}
+
+return <<<HTML
+    <h1>Menufy</h1>
+		{$html_block}
+		{$random}
+HTML;
 	}
 
 
