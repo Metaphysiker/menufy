@@ -72,7 +72,8 @@ class Menufy_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		wp_register_style( 'bootstrap-css', 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css' );
+ 	 	wp_enqueue_style('bootstrap-css');
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/menufy-public.css', array(), $this->version, 'all' );
 
 	}
@@ -110,47 +111,55 @@ class Menufy_Public {
 	}
 
 	public function menufy_func($atts){
-
-		$menu_items = wp_get_nav_menu_items("standard");
-		$random = "";
-
-		if (!function_exists('is_plugin_active')) {
-		    include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		}
-
-		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
-
-
-		}
-
+		$menus = get_terms( 'nav_menu' );
 		$html_block = "";
+		$attributes = shortcode_atts( array(
+			'menu_id' => $menus[0],
+			'per-page' => '50',
+		), $atts );
+		//$menu_items = wp_get_nav_menu_items($attributes['menu_id']);
+		$menu_items = $this->wp_get_menu_array($attributes['menu_id']);
+		$top_menu_items = $menu_items;
+		$top_menu_items_r = print_r($menu_items);
+		if (!function_exists('is_plugin_active')) {
+				include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
 
-		foreach ($menu_items as $key=>&$menu_item) {
-				//$meta = $this->get_meta_data_from_page($menu_item->url);
+		foreach ($top_menu_items as $key=>&$menu_item) {
 
-				$megamatic = YoastSEO()->meta->for_url($menu_item->url)->description;
+			$menu_item_description = "";
+
+			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
+				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
+			}
 
 		    $html_block = $html_block . "
+				<div class=\"shadow p-3 mb-5 bg-body rounded\">
 				<p>
 				<strong>
-					{$menu_item->title}
+					{$menu_item["title"]}
 				</strong>
 				</p>
 				<p>
-				{$menu_item->url}
+				{$menu_item["url"]}
 				</p>
 				<p>
-				{$menu_item->ID}
+				{$menu_item["id"]}
 				</p>
 				<p>
-				{$megamatic}
-				</p>";
+				{$menu_item_description}
+				</p>
+				<p>
+				{$key}
+				</p>
+				</div>
+				";
 		}
 
 return <<<HTML
     <h1>Menufy</h1>
 		{$html_block}
-		{$random}
+		{$top_menu_items_r}
 HTML;
 	}
 
@@ -180,11 +189,6 @@ HTML;
 	        }
 	    }
 	    return $menu;
-	}
-
-
-	function get_meta_data_from_page($url) {
-		yield YoastSEO()->meta->for_post($url)->description;
 	}
 
 }
