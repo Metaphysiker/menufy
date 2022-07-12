@@ -112,25 +112,24 @@ class Menufy_Public {
 	public function menufy_func($atts){
 
 		$menu_items = wp_get_nav_menu_items("standard");
-		$random = "<p>nope</p>";
+		$random = "";
 
 		if (!function_exists('is_plugin_active')) {
 		    include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
 		if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
-   /* Let's do cool things */
 
-
-			foreach ($menu_items as &$menu_item) {
-				$random = $random . YoastSEO()->meta->for_post($menu_item->url)->description;
-			}
 
 		}
 
 		$html_block = "";
 
-		foreach ($menu_items as &$menu_item) {
+		foreach ($menu_items as $key=>&$menu_item) {
+				//$meta = $this->get_meta_data_from_page($menu_item->url);
+
+				$megamatic = YoastSEO()->meta->for_url($menu_item->url)->description;
+
 		    $html_block = $html_block . "
 				<p>
 				<strong>
@@ -141,9 +140,11 @@ class Menufy_Public {
 				{$menu_item->url}
 				</p>
 				<p>
-				{$menu_item->id}
+				{$menu_item->ID}
 				</p>
-				";
+				<p>
+				{$megamatic}
+				</p>";
 		}
 
 return <<<HTML
@@ -152,6 +153,7 @@ return <<<HTML
 		{$random}
 HTML;
 	}
+
 
 
 	function wp_get_menu_array($current_menu) {
@@ -178,6 +180,11 @@ HTML;
 	        }
 	    }
 	    return $menu;
+	}
+
+
+	function get_meta_data_from_page($url) {
+		yield YoastSEO()->meta->for_post($url)->description;
 	}
 
 }
