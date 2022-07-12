@@ -129,29 +129,36 @@ class Menufy_Public {
 
 			$menu_item_description = "";
 
+			$item_featured_image = get_the_post_thumbnail_url($menu_item["ID"], 'full');
+
+
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
 				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
 			}
 
 		    $html_block = $html_block . "
-				<div class=\"shadow p-3 mb-5 bg-body rounded\">
-				<p>
-				<h2>
-					{$menu_item["title"]}
-				</h2>
-				</p>
-				<p>
-				{$menu_item["url"]}
-				</p>
-				<p>
-				{$menu_item["id"]}
-				</p>
-				<p>
-				{$menu_item_description}
-				</p>
-				<p>
-				{$key}
-				</p>
+
+				<div class=\"card shadow border-0 my-4\">
+				  <div class=\"card-body\">
+				    <h2 class=\"card-title\">{$menu_item["title"]}</h2>
+						<div class=\"row\">
+							<div class=\"col-4\">
+							<img src=\"{$item_featured_image}\" class=\"img-fluid\">
+							</div>
+							<div class=\"col-8\">
+							<p>
+								{$menu_item_description}
+							</p>
+							<p>
+							{$item_featured_image}
+							</p>
+							<p>
+								{$menu_item["ID"]}
+							</p>
+							<a href=\"{$menu_item["url"]}\" class=\"btn btn-primary\">MEHR ERFAHREN</a>
+							</div>
+						</div>
+				  </div>
 				</div>
 				";
 		}
