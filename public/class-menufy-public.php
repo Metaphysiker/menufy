@@ -146,15 +146,34 @@ class Menufy_Public {
 
 			$accordion_item = <<<HTML
 
-			<div class="accordion-item">
-				<h2 class="accordion-header" id="heading-{$menu_item["ID"]}">
-					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
+			<div class="my-3">
+
+			</div>
+
+			<div class="accordion-item border-0 menufy-accordion-item shadow-lg">
+				<h2 class="accordion-header menufy-accordion-header" id="heading-{$menu_item["ID"]}">
+					<button class="accordion-button menufy-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
 						{$menu_item["title"]}
 					</button>
 				</h2>
 				<div id="collapse-{$menu_item["ID"]}" class="accordion-collapse collapse" aria-labelledby="heading-{$menu_item["ID"]}" data-bs-parent="#menufy-accordion">
 					<div class="accordion-body">
-						{$menu_item_description}
+
+						<div class="row">
+							<div class="col-12 col-md-6">
+								<img src="{$item_featured_image}" class="menufy-img">
+							</div>
+							<div class="col-12 col-md-6 d-flex align-items-start flex-column mt-5 mt-md-0 ">
+								<div class="bd-highlight menufy-description">
+									{$menu_item_description}<br>
+								</div>
+								<div class="mt-auto mr-auto">
+									<a href="{$menu_item["url"]}" class="menufy-button align-self-end">MEHR ERFAHREN</a>
+								</div>
+							</div>
+						</div>
+
+
 					</div>
 				</div>
 			</div>
