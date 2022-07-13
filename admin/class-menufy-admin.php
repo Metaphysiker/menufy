@@ -119,10 +119,39 @@ public function dashboard_page_html(){
 			return;
 	}
 
+	$menus = get_terms( 'nav_menu' );
+
 	?>
 
 	<h1>Menufy</h1>
-	<p>Hier könnte mehr stehen</p>
+	<p>Wenn man ein Untermenü anzeigen will, dann muss man die ID angeben</p>
+
+	<?php
+	foreach ($menus as &$menu) {
+		echo "<h2> {$menu->name} - {$menu->term_id} </h2>";
+		echo "<p>";
+		echo "[menufy menu_id={$menu->term_id}]";
+		echo "</p>";
+		$array_menu = wp_get_nav_menu_items($menu->term_id);
+
+		foreach ($array_menu as $m) {
+				if (empty($m->menu_item_parent)) {
+						echo "<h3>{$m->title}: {$m->ID}</h3>";
+						echo "<p>";
+						echo "[menufy menu_id={$menu->term_id} sub_menu_id={$m->ID}]";
+						echo "</p>";
+						echo "<p>";
+						foreach ($array_menu as &$sm) {
+							if ($sm->menu_item_parent == $m->ID) {
+								echo " - {$sm->title}: {$sm->ID}";
+							}
+						}
+						echo "</p>";
+						echo "<hr>";
+				}
+		}
+	}
+	?>
 
 	<?php
 }

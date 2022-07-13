@@ -117,28 +117,24 @@ class Menufy_Public {
 		$accordion_items = "";
 		$attributes = shortcode_atts( array(
 			'menu_id' => $menus[0],
+			'sub_menu_id' => 0,
 			'per-page' => '50',
 		), $atts );
 		//$menu_items = wp_get_nav_menu_items($attributes['menu_id']);
 		$menu_items = $this->wp_get_menu_array($attributes['menu_id']);
-		$top_menu_items = $menu_items;
+
+		if( !empty($attributes['sub_menu_id']) ) {
+			$menu_items = $menu_items[$attributes['sub_menu_id']]["children"];
+		}
 		//$top_menu_items_r = print_r($menu_items);
 		if (!function_exists('is_plugin_active')) {
 				include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		foreach ($top_menu_items as $key=>&$menu_item) {
+		foreach ($menu_items as $key=>&$menu_item) {
 
 			$menu_item_description = "";
-			$class = "width: 100%; height: 200px; object-fit: cover;";
-			//$item_featured_image = "";
-			//$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
 			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
-
-
-			$get_the_ID = get_the_ID();
-			$url_to_postid = url_to_postid( $menu_item["url"] );
-
 
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
 				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
@@ -210,11 +206,10 @@ class Menufy_Public {
 		}
 
 return <<<HTML
-		{$html_block}
 		<div class="accordion" id="menufy-accordion" class="shadow">
 			{$accordion_items}
 		</div>
-		{$accordion}
+
 HTML;
 	}
 
