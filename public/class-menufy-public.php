@@ -140,6 +140,16 @@ class Menufy_Public {
 				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
 			}
 
+			if (empty($menu_item_description)) {
+
+				$meta_tags_of_external_page = get_meta_tags($menu_item["url"]);
+
+				if (!empty($meta_tags_of_external_page["description"])) {
+					$menu_item_description = $meta_tags_of_external_page["description"];
+				}
+
+			}
+
 			$accordion_item = <<<HTML
 
 			<div class="my-3">
