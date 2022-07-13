@@ -150,10 +150,13 @@ class Menufy_Public {
 
 			}
 
+		  if (get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true)) {
+				$menu_item_description = get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true);
+		  }
+
 			$accordion_item = <<<HTML
 
 			<div class="my-3">
-
 			</div>
 
 			<div class="accordion-item border-0 menufy-accordion-item shadow-lg">

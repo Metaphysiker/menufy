@@ -124,7 +124,10 @@ public function dashboard_page_html(){
 	?>
 
 	<h1>Menufy</h1>
-	<p>Wenn man ein Untermenü anzeigen will, dann muss man die ID angeben</p>
+	<p>Shortcode kopieren und bei der Seite eintragen</p>
+	<p>
+		Falls eine Meta-Description nicht passt, kann sie mit dem individuellen Feld "menufy_custom_description" überschrieben werden.
+	</p>
 
 	<?php
 	foreach ($menus as &$menu) {
