@@ -144,6 +144,7 @@ public function dashboard_page_html(){
 						foreach ($array_menu as &$sm) {
 							if ($sm->menu_item_parent == $m->ID) {
 								echo " - {$sm->title}: {$sm->ID}";
+								echo "<br>";
 							}
 						}
 						echo "</p>";
