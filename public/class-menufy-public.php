@@ -129,7 +129,7 @@ class Menufy_Public {
 
 			$menu_item_description = "";
 
-			$item_featured_image = get_the_post_thumbnail_url($menu_item["ID"], 'full');
+			$item_featured_image = get_the_post_thumbnail_url($menu_item["ID"], "medium");
 
 
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
@@ -138,7 +138,7 @@ class Menufy_Public {
 
 		    $html_block = $html_block . "
 
-				<div class=\"card shadow border-0 my-4\">
+				<div class=\"card shadow border-0 my-5\">
 				  <div class=\"card-body\">
 				    <h2 class=\"card-title\">{$menu_item["title"]}</h2>
 						<div class=\"row\">
