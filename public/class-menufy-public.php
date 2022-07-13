@@ -129,7 +129,12 @@ class Menufy_Public {
 
 			$menu_item_description = "";
 			//$item_featured_image = "";
-			$item_featured_image = get_the_post_thumbnail_url(get_the_ID(),'full'); 
+			//$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+
+
+			$get_the_ID = get_the_ID();
+			$url_to_postid = url_to_postid( $menu_item["url"] );
 
 
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
@@ -140,22 +145,23 @@ class Menufy_Public {
 
 				<div class=\"card shadow border-0 my-5\">
 				  <div class=\"card-body\">
-				    <h2 class=\"card-title\">{$menu_item["title"]}</h2>
+				    <h2 class=\"card-title menufy-card-title\">{$menu_item["title"]}</h2>
 						<div class=\"row\">
-							<div class=\"col-4\">
-							<img src=\"{$item_featured_image}\" class=\"img-fluid\">
+							<div class=\"col-12 col-md-6 d-flex\">
+							<img src=\"{$item_featured_image}\" style=\"width: 100%; height: 200px; object-fit: cover;\" class=\"img-fluid menufy-img\">
 							</div>
-							<div class=\"col-8\">
-							<p>
-								{$menu_item_description}
-							</p>
-							<p>
-							{$item_featured_image}
-							</p>
-							<p>
-								{$menu_item["ID"]}
-							</p>
-							<a href=\"{$menu_item["url"]}\" class=\"btn btn-primary\">MEHR ERFAHREN</a>
+							<div class=\"col-12 col-md-6 d-flex align-items-start flex-column mt-5 mt-md-0 \">
+
+								<div class=\"bd-highlight menufy-description\">
+									{$menu_item_description}<br>
+								</div>
+
+								<div class=\"mt-auto mr-auto\">
+
+									<a href=\"{$menu_item["url"]}\" class=\"menufy-button align-self-end\">MEHR ERFAHREN</a>
+								</div>
+
+
 							</div>
 						</div>
 				  </div>
