@@ -123,12 +123,6 @@ public function dashboard_page_html(){
 
 	?>
 
-	<?php
-	$meta_tags = get_meta_tags('https://rrrevolve.ch/302_vegane-gesellschaft-schweiz');
-	print_r($meta_tags);
-	print($meta_tags["description"]);
-	?>
-
 	<h1>Menufy</h1>
 	<p>Wenn man ein Untermenü anzeigen will, dann muss man die ID angeben</p>
 
