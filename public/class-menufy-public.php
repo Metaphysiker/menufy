@@ -96,7 +96,8 @@ class Menufy_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		wp_register_script( 'bootstrap-js', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' );
+	 	wp_enqueue_script('bootstrap-js');
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/menufy-public.js', array( 'jquery' ), $this->version, false );
 
 	}
@@ -113,6 +114,7 @@ class Menufy_Public {
 	public function menufy_func($atts){
 		$menus = get_terms( 'nav_menu' );
 		$html_block = "";
+		$accordion_items = "";
 		$attributes = shortcode_atts( array(
 			'menu_id' => $menus[0],
 			'per-page' => '50',
@@ -128,6 +130,7 @@ class Menufy_Public {
 		foreach ($top_menu_items as $key=>&$menu_item) {
 
 			$menu_item_description = "";
+			$class = "width: 100%; height: 200px; object-fit: cover;";
 			//$item_featured_image = "";
 			//$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
 			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
@@ -140,6 +143,24 @@ class Menufy_Public {
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
 				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
 			}
+
+			$accordion_item = <<<HTML
+
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="heading-{$menu_item["ID"]}">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
+						{$menu_item["title"]}
+					</button>
+				</h2>
+				<div id="collapse-{$menu_item["ID"]}" class="accordion-collapse collapse" aria-labelledby="heading-{$menu_item["ID"]}" data-bs-parent="#menufy-accordion">
+					<div class="accordion-body">
+						{$menu_item_description}
+					</div>
+				</div>
+			</div>
+			HTML;
+
+			$accordion_items = $accordion_items . $accordion_item;
 
 		    $html_block = $html_block . "
 
@@ -171,6 +192,10 @@ class Menufy_Public {
 
 return <<<HTML
 		{$html_block}
+		<div class="accordion" id="menufy-accordion" class="shadow">
+			{$accordion_items}
+		</div>
+		{$accordion}
 HTML;
 	}
 

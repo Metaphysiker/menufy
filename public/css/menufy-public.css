@@ -1,4 +1,7 @@
 /**
  * All of the CSS for your public-facing functionality should be
  * included in this file.
+ .accordion-button {
+   background-color: white !important;
+ }
  */
