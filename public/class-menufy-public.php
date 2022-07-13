@@ -120,7 +120,7 @@ class Menufy_Public {
 		//$menu_items = wp_get_nav_menu_items($attributes['menu_id']);
 		$menu_items = $this->wp_get_menu_array($attributes['menu_id']);
 		$top_menu_items = $menu_items;
-		$top_menu_items_r = print_r($menu_items);
+		//$top_menu_items_r = print_r($menu_items);
 		if (!function_exists('is_plugin_active')) {
 				include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
@@ -128,8 +128,8 @@ class Menufy_Public {
 		foreach ($top_menu_items as $key=>&$menu_item) {
 
 			$menu_item_description = "";
-
-			$item_featured_image = get_the_post_thumbnail_url($menu_item["ID"], "medium");
+			//$item_featured_image = "";
+			$item_featured_image = get_the_post_thumbnail_url(get_the_ID(),'full'); 
 
 
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
@@ -165,7 +165,6 @@ class Menufy_Public {
 
 return <<<HTML
 		{$html_block}
-		{$top_menu_items_r}
 HTML;
 	}
 
