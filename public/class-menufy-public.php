@@ -136,6 +136,14 @@ class Menufy_Public {
 			$menu_item_description = "";
 			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
 
+			if(empty($item_featured_image)){
+				$item_featured_image = get_field("menu_custom_image_url", $menu_item["ID"]);
+			}
+
+			if(empty($item_featured_image)){
+							$item_featured_image = "https://vegan.ch/wp-content/uploads/VGS_vegipass2023_keyvisual_nr02_dr-scaled.jpg";
+			}
+
 			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
 				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
 			}
@@ -153,6 +161,10 @@ class Menufy_Public {
 		  if (get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true)) {
 				$menu_item_description = get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true);
 		  }
+
+			if (empty($menu_item_description)) {
+				$menu_item_description =	get_field('menu_custom_description', $menu_item["ID"]);
+			}
 
 			$accordion_item = <<<HTML
 
