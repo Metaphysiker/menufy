@@ -156,10 +156,10 @@ class Menufy_Public {
 
 			$accordion_item = <<<HTML
 
-			<div class="my-3">
+			<div class="my-1">
 			</div>
 
-			<div class="accordion-item border-0 menufy-accordion-item shadow-lg">
+			<div class="accordion-item border-0 menufy-accordion-item">
 				<h2 class="accordion-header menufy-accordion-header" id="heading-{$menu_item["ID"]}">
 					<button class="accordion-button menufy-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
 						{$menu_item["title"]}
