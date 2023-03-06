@@ -134,7 +134,12 @@ class Menufy_Public {
 		foreach ($menu_items as $key=>&$menu_item) {
 
 			$menu_item_description = "";
-			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+
+			$item_featured_image =	get_field('menufy_custom_image_url', $menu_item["ID"]);
+
+			if(empty($item_featured_image)){
+				$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+			}
 
 			if(empty($item_featured_image)){
 				$item_featured_image = get_field("menu_custom_image_url", $menu_item["ID"]);

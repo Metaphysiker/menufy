@@ -16,7 +16,7 @@
  * Plugin Name:       Menufy
  * Plugin URI:        https://www.philosophische-insel.ch/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           1.0.8
  * Author:            Sandro Räss
  * Author URI:        https://www.philosophische-insel.ch/
  * License:           GPL-2.0+
