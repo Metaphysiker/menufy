@@ -152,12 +152,47 @@ class Menufy_Public
 
 				if ($attributes["theme"] == "accordion"){
 					$final_html = $this->generateAccordionHTML($menu_items);
+				}  elseif ($attributes["theme"] == "blocks") {
+					$final_html = $this->generateBlocksHTML($menu_items);
 				} else {
 					$final_html = $this->generateAccordionHTML($menu_items);
 				}
 
         return $final_html;
     }
+
+		public function generateBlocksHTML($menu_items)
+		{
+				$block_items = "";
+				foreach ($menu_items as $key => &$menu_item) {
+
+						$menu_item_description = $this->getMenuItemDescription($menu_item);
+						$item_featured_image = $this->getItemFeaturedImage($menu_item);
+						$block_item = <<<HTML
+<div class="col-12 col-md-4 menufy-single-block">
+  <h2 class="menufy-single-block-title">
+		{$menu_item["title"]}
+	</h2>
+  <p class="menufy-single-block-content">
+    {$menu_item_description}
+  </p>
+  <div class="menufy-single-block-button-container">
+    <a href="{$menu_item["url"]}" class="menufy-single-block-button">MEHR ERFAHREN</a>
+  </div>
+</div>
+HTML;
+
+						$block_items  = $block_items  . $block_item;
+				}
+
+				return <<<HTML
+		<div class="menufy-blocks-container" id="menufy-blocks-container">
+			<div class="row">
+				{$block_items}
+			</div>
+		</div>
+HTML;
+		}
 
     public function generateAccordionHTML($menu_items)
     {
@@ -209,7 +244,7 @@ HTML;
     public function getMenuItemDescription($menu_item)
     {
         $menu_item_description = get_field(
-            "menu_custom_description",
+            "menufy_custom_description_text",
             $menu_item["ID"]
         );
 
@@ -222,14 +257,16 @@ HTML;
             }
         }
 
-        if (
-            is_plugin_active("wordpress-seo/wp-seo.php") ||
-            is_plugin_active("wordpress-seo-premium/wp-seo-premium.php")
-        ) {
-            $menu_item_description = YoastSEO()->meta->for_url(
-                $menu_item["url"]
-            )->description;
-        }
+				if (empty($menu_item_description)) {
+					if (
+	            is_plugin_active("wordpress-seo/wp-seo.php") ||
+	            is_plugin_active("wordpress-seo-premium/wp-seo-premium.php")
+	        ) {
+	            $menu_item_description = YoastSEO()->meta->for_url(
+	                $menu_item["url"]
+	            )->description;
+	        }
+				}
 
         return $menu_item_description;
     }
