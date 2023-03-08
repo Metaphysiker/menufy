@@ -113,12 +113,12 @@ class Menufy_Public {
 
 	public function menufy_func($atts){
 		$menus = get_terms( 'nav_menu' );
-		$html_block = "";
 		$accordion_items = "";
 		$attributes = shortcode_atts( array(
 			'menu_id' => $menus[0],
 			'sub_menu_id' => 0,
 			'per-page' => '50',
+			'theme' => 'accordion'
 		), $atts );
 		//$menu_items = wp_get_nav_menu_items($attributes['menu_id']);
 		$menu_items = $this->wp_get_menu_array($attributes['menu_id']);
@@ -131,114 +131,93 @@ class Menufy_Public {
 				include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 
-		foreach ($menu_items as $key=>&$menu_item) {
 
-			$menu_item_description = "";
-			$item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+		return $this->generateAccordionHTML($menu_items);
 
-			if(empty($item_featured_image)){
-				$item_featured_image = get_field("menu_custom_image_url", $menu_item["ID"]);
-			}
-
-			if(empty($item_featured_image)){
-							$item_featured_image = "https://vegan.ch/wp-content/uploads/VGS_vegipass2023_keyvisual_nr02_dr-scaled.jpg";
-			}
-
-			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
-				$menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
-			}
-
-			if (empty($menu_item_description)) {
-
-				$meta_tags_of_external_page = get_meta_tags($menu_item["url"]);
-
-				if (!empty($meta_tags_of_external_page["description"])) {
-					$menu_item_description = $meta_tags_of_external_page["description"];
-				}
-
-			}
-
-		  if (get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true)) {
-				$menu_item_description = get_post_meta(url_to_postid( $menu_item["url"] ), 'menufy_custom_description', true);
-		  }
-
-			if (empty($menu_item_description)) {
-				$menu_item_description =	get_field('menu_custom_description', $menu_item["ID"]);
-			}
-
-			$accordion_item = <<<HTML
-
-			<div class="my-1">
-			</div>
-
-			<div class="accordion-item border-0 menufy-accordion-item">
-				<h2 class="accordion-header menufy-accordion-header" id="heading-{$menu_item["ID"]}">
-					<button class="accordion-button menufy-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
-						{$menu_item["title"]}
-					</button>
-				</h2>
-				<div id="collapse-{$menu_item["ID"]}" class="accordion-collapse collapse" aria-labelledby="heading-{$menu_item["ID"]}" data-bs-parent="#menufy-accordion">
-					<div class="accordion-body">
-
-						<div class="row">
-							<div class="col-12 col-md-6">
-								<img src="{$item_featured_image}" class="menufy-img">
-							</div>
-							<div class="col-12 col-md-6 d-flex align-items-start flex-column mt-5 mt-md-0 ">
-								<div class="bd-highlight menufy-description">
-									{$menu_item_description}<br>
-								</div>
-								<div class="mt-auto mr-auto">
-									<a href="{$menu_item["url"]}" class="menufy-button align-self-end">MEHR ERFAHREN</a>
-								</div>
-							</div>
-						</div>
-
-
-					</div>
-				</div>
-			</div>
-			HTML;
-
-			$accordion_items = $accordion_items . $accordion_item;
-
-		    $html_block = $html_block . "
-
-				<div class=\"card shadow border-0 my-5\">
-				  <div class=\"card-body\">
-				    <h2 class=\"card-title menufy-card-title\">{$menu_item["title"]}</h2>
-						<div class=\"row\">
-							<div class=\"col-12 col-md-6 d-flex\">
-							<img src=\"{$item_featured_image}\" style=\"width: 100%; height: 200px; object-fit: cover;\" class=\"img-fluid menufy-img\">
-							</div>
-							<div class=\"col-12 col-md-6 d-flex align-items-start flex-column mt-5 mt-md-0 \">
-
-								<div class=\"bd-highlight menufy-description\">
-									{$menu_item_description}<br>
-								</div>
-
-								<div class=\"mt-auto mr-auto\">
-
-									<a href=\"{$menu_item["url"]}\" class=\"menufy-button align-self-end\">MEHR ERFAHREN</a>
-								</div>
-
-
-							</div>
-						</div>
-				  </div>
-				</div>
-				";
-		}
-
-return <<<HTML
-		<div class="accordion" id="menufy-accordion" class="shadow">
-			{$accordion_items}
-		</div>
-
-HTML;
 	}
 
+ function generateAccordionHTML($menu_items){
+	 $accordion_items = "";
+	 foreach ($menu_items as $key=>&$menu_item) {
 
+		 $menu_item_description = $this->getMenuItemDescription($menu_item);
+
+		 $item_featured_image = $this->getItemFeaturedImage($menu_item);
+
+		 $accordion_item = <<<HTML
+
+		 <div class="my-1">
+		 </div>
+
+		 <div class="accordion-item border-0 menufy-accordion-item">
+			 <h2 class="accordion-header menufy-accordion-header" id="heading-{$menu_item["ID"]}">
+				 <button class="accordion-button menufy-accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{$menu_item["ID"]}" aria-expanded="false" aria-controls="collapse-{$menu_item["ID"]}">
+					 {$menu_item["title"]}
+				 </button>
+			 </h2>
+			 <div id="collapse-{$menu_item["ID"]}" class="accordion-collapse collapse" aria-labelledby="heading-{$menu_item["ID"]}" data-bs-parent="#menufy-accordion">
+				 <div class="accordion-body">
+
+					 <div class="row">
+						 <div class="col-12 col-md-6">
+							 <img src="{$item_featured_image}" class="menufy-img">
+						 </div>
+						 <div class="col-12 col-md-6 d-flex align-items-start flex-column mt-5 mt-md-0 ">
+							 <div class="bd-highlight menufy-description">
+								 {$menu_item_description}<br>
+							 </div>
+							 <div class="mt-auto mr-auto">
+								 <a href="{$menu_item["url"]}" class="menufy-button align-self-end">MEHR ERFAHREN</a>
+							 </div>
+						 </div>
+					 </div>
+
+
+				 </div>
+			 </div>
+		 </div>
+		 HTML;
+
+		 $accordion_items = $accordion_items . $accordion_item;
+	 }
+
+	 return <<<HTML
+	 		<div class="accordion" id="menufy-accordion" class="shadow">
+	 			{$accordion_items}
+	 		</div>
+
+	 HTML;
+ }
+
+ function getMenuItemDescription($menu_item){
+	 $menu_item_description = get_field("menufy_custom_description_text", $menu_item["ID"]);
+
+	 if (empty($menu_item_description)) {
+
+		 $meta_tags_of_external_page = get_meta_tags($menu_item["url"]);
+
+		 if (!empty($meta_tags_of_external_page["description"])) {
+			 $menu_item_description = $meta_tags_of_external_page["description"];
+		 }
+	 }
+
+	 if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) || is_plugin_active( 'wordpress-seo-premium/wp-seo-premium.php' ) ) {
+		 $menu_item_description = YoastSEO()->meta->for_url($menu_item["url"])->description;
+	 }
+
+	 return $menu_item_description;
+
+ }
+
+ function getItemFeaturedImage($menu_item){
+	 $item_featured_image = get_field("menufy_custom_image_url", $menu_item["ID"]);
+
+	 if(empty($item_featured_image)){
+		 $item_featured_image = get_the_post_thumbnail_url(url_to_postid( $menu_item["url"] ),'full');
+	 }
+
+	 return $item_featured_image;
+ }
 
 	function wp_get_menu_array($current_menu) {
 
