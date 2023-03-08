@@ -147,17 +147,25 @@ class Menufy_Public
         if (!function_exists("is_plugin_active")) {
             include_once ABSPATH . "wp-admin/includes/plugin.php";
         }
-        return $this->generateAccordionHTML($menu_items);
+
+				$final_html = "";
+
+				if ($attributes["theme"] == "accordion"){
+					$final_html = $this->generateAccordionHTML($menu_items);
+				} else {
+					$final_html = $this->generateAccordionHTML($menu_items);
+				}
+
+        return $final_html;
     }
 
     public function generateAccordionHTML($menu_items)
     {
         $accordion_items = "";
         foreach ($menu_items as $key => &$menu_item) {
+
             $menu_item_description = $this->getMenuItemDescription($menu_item);
-
             $item_featured_image = $this->getItemFeaturedImage($menu_item);
-
             $accordion_item = <<<HTML
 
 		 <div class="my-1">
@@ -201,7 +209,7 @@ HTML;
     public function getMenuItemDescription($menu_item)
     {
         $menu_item_description = get_field(
-            "menufy_custom_description_text",
+            "menu_custom_description",
             $menu_item["ID"]
         );
 
